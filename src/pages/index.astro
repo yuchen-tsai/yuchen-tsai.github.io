@@ -1,0 +1,90 @@
+---
+import Base from '../layouts/Base.astro';
+import Navigation from '../components/Navigation.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Research from '../components/Research.astro';
+import Publications from '../components/Publications.astro';
+import Contact from '../components/Contact.astro';
+import Enso from '../components/Enso.astro';
+---
+
+<Base>
+  <div class="scene" id="scene">
+    <Enso class="scene-fallback" />
+  </div>
+  <Navigation />
+  <main id="main">
+    <Hero />
+    <About />
+    <Research />
+    <Publications />
+    <Contact />
+  </main>
+  <p class="look-hint" aria-hidden="true">Drag to look around</p>
+</Base>
+
+<script>
+  const root = document.documentElement;
+
+  // Reveal text as it enters view (only when motion is welcome).
+  const reveals = document.querySelectorAll('.reveal');
+  if (root.classList.contains('motion') && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      },
+      { rootMargin: '0px 0px -10% 0px' },
+    );
+    reveals.forEach((el) => io.observe(el));
+  } else {
+    reveals.forEach((el) => el.classList.add('is-visible'));
+  }
+
+  // First visit only: a quiet note that the garden goes all the way around.
+  function offerLookHint() {
+    const hint = document.querySelector<HTMLElement>('.look-hint');
+    let seen = false;
+    try {
+      seen = localStorage.getItem('zen-look') === 'seen';
+      localStorage.setItem('zen-look', 'seen');
+    } catch {}
+    if (!hint || seen) return;
+    if (matchMedia('(pointer: coarse)').matches) hint.textContent = 'Swipe sideways to look around';
+    const hide = () => hint.classList.remove('is-shown');
+    window.setTimeout(() => hint.classList.add('is-shown'), 3500);
+    window.setTimeout(hide, 11000);
+    window.addEventListener('zen:look', hide, { once: true });
+  }
+
+  // The 3D scene is progressive enhancement: text first, particles once idle.
+  const webgl = (() => {
+    try {
+      const canvas = document.createElement('canvas');
+      return !!(canvas.getContext('webgl2') || canvas.getContext('webgl'));
+    } catch {
+      return false;
+    }
+  })();
+
+  const container = document.getElementById('scene');
+  if (container && webgl && root.classList.contains('motion')) {
+    root.classList.add('has-webgl');
+    const load = () =>
+      import('../scenes/ZenScene')
+        .then(({ start }) => {
+          start(container);
+          offerLookHint();
+        })
+        .catch((err) => {
+          console.error(err);
+          root.classList.remove('has-webgl');
+        });
+    if ('requestIdleCallback' in window) requestIdleCallback(load, { timeout: 1200 });
+    else setTimeout(load, 200);
+  }
+</script>

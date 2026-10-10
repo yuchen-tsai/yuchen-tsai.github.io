@@ -1,0 +1,51 @@
+---
+import { research } from '../data/site';
+---
+
+<div id="research">
+  {
+    research.map((item, i) => (
+      <section id={item.id} class="section research" data-shape={item.shape} data-side="right" aria-labelledby={`${item.id}-title`}>
+        <div class="section__inner column research__body">
+          <span class="research__kanji reveal" aria-hidden="true">{item.kanji}</span>
+          <div class="research__text">
+            <p class="eyebrow reveal">Research · {String(i + 1).padStart(2, '0')}</p>
+            <h2 id={`${item.id}-title`} class="research__title reveal">{item.title}</h2>
+            <p class="research__desc reveal">{item.text}</p>
+          </div>
+        </div>
+      </section>
+    ))
+  }
+</div>
+
+<style>
+  .research__body {
+    grid-template-columns: auto 1fr;
+    column-gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: start;
+  }
+
+  .research__kanji {
+    font-family: var(--serif);
+    font-size: clamp(3.5rem, 9vw, 6.5rem);
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.85;
+  }
+
+  .research__text {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .research__title {
+    font-size: clamp(1.9rem, 4vw, 2.9rem);
+  }
+
+  .research__desc {
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 28em;
+  }
+</style>

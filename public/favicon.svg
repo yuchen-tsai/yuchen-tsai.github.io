@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <style>g{stroke:#1e1d1b}@media (prefers-color-scheme:dark){g{stroke:#e6e1d6}}</style>
+  <g fill="none" stroke-linecap="round" transform="rotate(-62 100 100)">
+    <circle cx="100" cy="100" r="74" stroke-width="22" stroke-dasharray="420 70"/>
+  </g>
+</svg>

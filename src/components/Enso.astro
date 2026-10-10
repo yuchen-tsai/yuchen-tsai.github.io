@@ -1,0 +1,15 @@
+---
+// Brushed ensō used as the static (no-WebGL / reduced-motion) fallback.
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<svg class={className} viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+  <g fill="none" stroke="currentColor" stroke-linecap="round" transform="rotate(-62 100 100)">
+    <circle cx="100" cy="100" r="78" stroke-width="13" stroke-dasharray="440 50" opacity="0.9" />
+    <circle cx="101" cy="99" r="74" stroke-width="3" stroke-dasharray="400 90" opacity="0.5" />
+    <circle cx="99" cy="101" r="83" stroke-width="2" stroke-dasharray="300 190" stroke-dashoffset="-40" opacity="0.4" />
+  </g>
+</svg>

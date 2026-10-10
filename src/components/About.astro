@@ -1,0 +1,42 @@
+---
+import { site, alsoInterested, shapes } from '../data/site';
+---
+
+<section id="about" class="section" data-shape={shapes.enso} data-side="right">
+  <div class="section__inner column">
+    <p class="eyebrow reveal">About</p>
+    <p class="about__bio reveal">{site.bio}</p>
+    <p class="about__status reveal">
+      {site.role} at {site.affiliation}, working with <a href={site.advisor.href}>Prof. {site.advisor.name}</a>.
+    </p>
+    {
+      site.roles.map((r) => (
+        <p class="about__status reveal">
+          {r.role} at <a href={r.href}>{r.org}</a>, since {r.since}.
+        </p>
+      ))
+    }
+    <p class="about__also reveal">Also: {alsoInterested.join(' · ')}</p>
+  </div>
+</section>
+
+<style>
+  .about__bio {
+    font-family: var(--serif);
+    font-size: clamp(1.3rem, 2.6vw, 1.85rem);
+    line-height: 1.6;
+  }
+
+  .about__status {
+    font-size: 0.95rem;
+  }
+
+  .about__status a {
+    color: var(--accent);
+  }
+
+  .about__also {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+</style>

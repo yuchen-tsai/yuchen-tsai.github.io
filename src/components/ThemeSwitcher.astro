@@ -1,0 +1,60 @@
+<button class="icon-btn theme-switch" type="button" aria-label="Switch to night theme" title="Day / night">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.2" />
+    <path class="theme-switch__half" d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" />
+  </svg>
+</button>
+
+<style is:global>
+  .icon-btn {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    color: var(--muted);
+    transition: color 0.3s, background-color 0.3s;
+  }
+
+  .icon-btn:hover,
+  .icon-btn:focus-visible {
+    color: var(--ink);
+    background: var(--faint);
+  }
+
+  .icon-btn svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  .theme-switch__half {
+    transform-origin: 12px 12px;
+    transition: transform 1.2s var(--ease);
+  }
+
+  [data-theme='dark'] .theme-switch__half {
+    transform: rotate(180deg);
+  }
+</style>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>('.theme-switch');
+  const root = document.documentElement;
+
+  const sync = () => {
+    const next = root.dataset.theme === 'dark' ? 'day' : 'night';
+    button?.setAttribute('aria-label', `Switch to ${next} theme`);
+  };
+
+  button?.addEventListener('click', () => {
+    const theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = theme;
+    try {
+      localStorage.setItem('theme', theme);
+    } catch {}
+    sync();
+    window.dispatchEvent(new CustomEvent('zen:theme', { detail: theme }));
+  });
+
+  sync();
+</script>

@@ -1,0 +1,86 @@
+---
+import { site, publications, shapes } from '../data/site';
+---
+
+<section id="publications" class="section" data-shape={shapes.garden} data-side="right" aria-labelledby="pub-title">
+  <div class="section__inner column">
+    <p class="eyebrow reveal">文 · Writing</p>
+    <h2 id="pub-title" class="pubs__title reveal">Publications</h2>
+    <ol class="pubs">
+      {
+        publications.map((pub) => (
+          <li class="pub reveal">
+            <span class="pub__venue">
+              {pub.venue} {pub.year}
+            </span>
+            <span class="pub__title">{pub.title}</span>
+            <span class="pub__authors">
+              {pub.authors.map((name, i) => (
+                <>
+                  {i > 0 && ', '}
+                  {name === site.fullName ? <strong>{name}</strong> : name}
+                </>
+              ))}
+            </span>
+            <span class="pub__links">
+              {Object.entries(pub.links).map(([label, href]) => (
+                <a href={href}>{label.toUpperCase()}</a>
+              ))}
+            </span>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .pubs__title {
+    font-size: clamp(1.9rem, 4vw, 2.9rem);
+  }
+
+  .pubs {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .pub {
+    display: grid;
+    gap: 0.3rem;
+    padding: 1.4rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .pub__venue {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .pub__title {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    line-height: 1.45;
+  }
+
+  .pub__authors {
+    color: var(--muted);
+    font-size: 0.88rem;
+  }
+
+  .pub__authors strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .pub__links {
+    display: flex;
+    gap: 1.1rem;
+    margin-top: 0.3rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+  }
+</style>

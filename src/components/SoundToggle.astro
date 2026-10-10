@@ -1,0 +1,153 @@
+---
+const stations = [0, 1, 2, 3, 4, 5];
+---
+
+<div class="sound">
+  <button class="icon-btn sound-toggle" type="button" aria-pressed="false" aria-label="Spatial sound" title="Spatial sound, best with headphones">
+    <!-- A compass seen from behind you: the ring of stations turns as you do. -->
+    <span class="compass" data-compass aria-hidden="true">
+      <svg class="compass__plane compass__ring" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.3" />
+        <!-- Home (the ensō) is a dot; the other stations are ticks. -->
+        <circle cx="12" cy="3.5" r="2.1" fill="currentColor" />
+        {
+          stations.slice(1).map((k) => (
+            <line x1="12" y1="1.6" x2="12" y2="5.4" transform={`rotate(${k * 60} 12 12)`} stroke="currentColor" stroke-width="1.3" />
+          ))
+        }
+      </svg>
+      <svg class="compass__plane" viewBox="0 0 24 24">
+        <path class="compass__front" d="M12 5.2 L14.8 9.8 L9.2 9.8 Z" />
+      </svg>
+      <svg viewBox="0 0 24 24">
+        <circle cx="12" cy="12.6" r="1.8" fill="currentColor" />
+      </svg>
+    </span>
+  </button>
+  <div class="sound-hint" role="status" aria-live="polite"></div>
+</div>
+
+<style>
+  .sound {
+    position: relative;
+  }
+
+  .compass {
+    position: relative;
+    display: block;
+    width: 1.3rem;
+    height: 1.3rem;
+    perspective: 3rem;
+  }
+
+  .compass svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .compass__plane {
+    transform: rotateX(58deg);
+  }
+
+  .compass__ring {
+    transform: rotateX(58deg) rotate(calc(var(--yaw, 0deg) * -1));
+    opacity: 0.5;
+    transition: opacity 0.6s var(--ease), color 0.6s var(--ease);
+  }
+
+  .compass__front {
+    fill: var(--accent);
+  }
+
+  .sound-toggle[aria-pressed='true'] .compass__ring {
+    opacity: 1;
+    color: var(--accent);
+  }
+
+  .sound-hint {
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    right: 0;
+    white-space: nowrap;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    opacity: 0;
+    translate: 0 -0.3rem;
+    pointer-events: none;
+    transition: opacity 0.8s var(--ease), translate 0.8s var(--ease);
+  }
+
+  .sound-hint.is-shown {
+    opacity: 1;
+    translate: 0 0;
+    pointer-events: auto;
+  }
+
+  .sound-hint :global(button) {
+    letter-spacing: inherit;
+    color: var(--accent);
+  }
+</style>
+
+<script>
+  import type { SoundGarden } from '../scenes/SpatialAudio';
+
+  const KEY = 'zen-sound';
+  const button = document.querySelector<HTMLButtonElement>('.sound-toggle');
+  const hint = document.querySelector<HTMLElement>('.sound-hint');
+  let ctx: AudioContext | null = null;
+  let garden: SoundGarden | null = null;
+  let hideTimer = 0;
+
+  function say(content: string | Node, ms: number) {
+    if (!hint) return;
+    hint.replaceChildren(content);
+    hint.classList.add('is-shown');
+    window.clearTimeout(hideTimer);
+    hideTimer = window.setTimeout(() => hint.classList.remove('is-shown'), ms);
+  }
+
+  async function setSound(on: boolean) {
+    button?.setAttribute('aria-pressed', String(on));
+    try {
+      localStorage.setItem(KEY, on ? 'on' : 'off');
+    } catch {}
+    if (!on) {
+      hint?.classList.remove('is-shown');
+      garden?.setEnabled(false);
+      return;
+    }
+    // Both must start inside the click itself, or Safari refuses them.
+    ctx ??= new AudioContext();
+    void ctx.resume();
+    const orientation = window.DeviceOrientationEvent as unknown as { requestPermission?: () => Promise<string> };
+    orientation?.requestPermission?.().catch(() => {});
+
+    say('Best with headphones', 4500);
+    if (!garden) {
+      const { SoundGarden } = await import('../scenes/SpatialAudio');
+      garden = new SoundGarden(ctx);
+    }
+    garden.setEnabled(button?.getAttribute('aria-pressed') === 'true');
+  }
+
+  button?.addEventListener('click', () => setSound(button.getAttribute('aria-pressed') !== 'true'));
+
+  // Browsers need a click before sound can play, so returning listeners get an
+  // offer to resume rather than sound out of nowhere.
+  let remembered = false;
+  try {
+    remembered = localStorage.getItem(KEY) === 'on';
+  } catch {}
+  if (remembered) {
+    const resume = document.createElement('button');
+    resume.type = 'button';
+    resume.textContent = 'Resume sound';
+    resume.addEventListener('click', () => setSound(true));
+    window.setTimeout(() => say(resume, 12000), 1500);
+  }
+</script>

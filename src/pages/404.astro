@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import Enso from '../components/Enso.astro';
+import { site } from '../data/site';
+---
+
+<Base title={`Not found · ${site.name}`}>
+  <main id="main" class="section lost">
+    <Enso class="lost__enso" />
+    <p class="eyebrow">無 · Nothing here</p>
+    <h1>This path leads to emptiness.</h1>
+    <a href="/">Return home</a>
+  </main>
+</Base>
+
+<style>
+  .lost {
+    justify-items: center;
+    text-align: center;
+    gap: 1.25rem;
+  }
+  .lost__enso {
+    width: 9rem;
+    opacity: 0.5;
+  }
+  h1 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+  }
+</style>

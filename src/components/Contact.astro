@@ -1,0 +1,62 @@
+---
+import { site, shapes } from '../data/site';
+---
+
+<section id="contact" class="section contact" data-shape={shapes.enso} data-side="center" aria-labelledby="contact-title">
+  <div class="contact__inner">
+    <p class="eyebrow reveal">縁 · Connection</p>
+    <h2 id="contact-title" class="contact__title reveal">Say hello.</h2>
+    <a class="contact__email reveal" href={`mailto:${site.email}`}>{site.email}</a>
+    <ul class="contact__links reveal">
+      {site.links.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+    </ul>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <p>© {new Date().getFullYear()} {site.name}</p>
+  <p>Just this breath.</p>
+</footer>
+
+<style>
+  .contact {
+    justify-items: center;
+    text-align: center;
+  }
+
+  .contact__inner {
+    display: grid;
+    gap: 1.2rem;
+    justify-items: center;
+  }
+
+  .contact__title {
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+  }
+
+  .contact__email {
+    font-family: var(--serif);
+    font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  }
+
+  .contact__links {
+    display: flex;
+    gap: 1.75rem;
+    margin: 0.5rem 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .site-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 2rem var(--space);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+</style>

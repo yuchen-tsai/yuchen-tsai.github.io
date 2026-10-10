@@ -1,0 +1,86 @@
+---
+import { site, shapes } from '../data/site';
+---
+
+<section id="top" class="section hero" data-shape={shapes.enso} data-side="center">
+  <div class="hero__inner">
+    <p class="eyebrow reveal">静寂 · Stillness</p>
+    <h1 class="hero__name reveal">{site.name}</h1>
+    <p class="hero__full reveal">{site.fullName}</p>
+    <p class="hero__role reveal">{site.role} <span aria-hidden="true">·</span> {site.affiliation}</p>
+    <p class="hero__tagline reveal">{site.tagline}</p>
+  </div>
+  <a class="hero__breathe" href="#about">
+    <span class="hero__circle" aria-hidden="true"></span>
+    <span>Breathe</span>
+  </a>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .hero__inner {
+    display: grid;
+    gap: 1.1rem;
+    justify-items: center;
+    max-width: 40rem;
+  }
+
+  .hero__name {
+    font-size: clamp(2.6rem, 7vw, 5.2rem);
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+  }
+
+  .hero__full {
+    margin-top: -0.6rem;
+    font-family: var(--serif);
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .hero__role {
+    color: var(--muted);
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+  }
+
+  .hero__tagline {
+    margin-top: 1.25rem;
+    font-family: var(--serif);
+    font-size: clamp(1.05rem, 2vw, 1.3rem);
+    max-width: 26em;
+  }
+
+  .hero__breathe {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    translate: -50% 0;
+    display: grid;
+    justify-items: center;
+    gap: 0.8rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: none;
+  }
+
+  .hero__circle {
+    width: 1.6rem;
+    height: 1.6rem;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    animation: breathe-circle var(--breath) ease-in-out infinite;
+  }
+
+  @keyframes breathe-circle {
+    0%, 100% { transform: scale(0.7); opacity: 0.4; }
+    50% { transform: scale(1.15); opacity: 1; }
+  }
+</style>

@@ -1,0 +1,98 @@
+---
+import { site } from '../data/site';
+import ThemeSwitcher from './ThemeSwitcher.astro';
+import SoundToggle from './SoundToggle.astro';
+
+const items = [
+  { href: '#research', label: 'Research' },
+  { href: '#publications', label: 'Publications' },
+  { href: '#contact', label: 'Contact' },
+];
+---
+
+<header class="nav">
+  <a class="nav__brand" href="#top" aria-label={`${site.name}, back to top`}>
+    <span class="nav__mark" aria-hidden="true"></span>
+    <span>{site.name}</span>
+  </a>
+  <nav aria-label="Sections">
+    <ul class="nav__list">
+      {items.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+    </ul>
+  </nav>
+  <div class="nav__controls">
+    <SoundToggle />
+    <ThemeSwitcher />
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 1.4rem var(--space);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    background: linear-gradient(rgb(var(--bg-rgb) / 0.85), rgb(var(--bg-rgb) / 0));
+  }
+
+  .nav__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-family: var(--serif);
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    background: none;
+  }
+
+  .nav__mark {
+    width: 0.75rem;
+    height: 0.75rem;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    animation: breathe var(--breath) ease-in-out infinite;
+  }
+
+  .nav nav {
+    margin-left: auto;
+  }
+
+  .nav__list {
+    display: flex;
+    gap: 1.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--muted);
+  }
+
+  .nav__list a:hover,
+  .nav__list a:focus-visible {
+    color: var(--ink);
+  }
+
+  .nav__controls {
+    display: flex;
+    gap: 0.9rem;
+    align-items: center;
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: scale(0.8); opacity: 0.55; }
+    50% { transform: scale(1.1); opacity: 1; }
+  }
+
+  @media (max-width: 40rem) {
+    .nav__list {
+      display: none;
+    }
+    .nav__controls {
+      margin-left: auto;
+    }
+  }
+</style>
